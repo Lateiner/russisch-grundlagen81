@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fehlersuche: Possessive Adjektive</title>
+    <!-- Polyfill für Drag & Drop (hier nicht primär genutzt, aber für Konsistenz dabei) -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); font-size: 1.8rem; margin-bottom: 5px; }
+        h2 { text-align: center; color: var(--secondary-color); font-size: 1.2rem; font-weight: 400; margin-bottom: 30px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .proofreading-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 25px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #333;
+        }
+
+        .word-fix {
+            display: inline-block;
+            position: relative;
+        }
+
+        select {
+            font-size: 1.1rem;
+            font-family: inherit;
+            padding: 2px 5px;
+            border: 2px solid #cbd5e0;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #e67e22; /* Farbe für "zu korrigierende" Wörter */
+            font-weight: bold;
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        select.incorrect {
+            border-color: var(--error-color);
+            background-color: #ffebee;
+            color: var(--error-color);
+        }
+
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .proofreading-box { font-size: 1rem; padding: 15px; }
+            select { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 5</h1>
+    <h2>Fehlersuche im Text (15 Korrekturen)</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Im folgenden Text haben sich 15 Fehler bei den possessiven Adjektiven eingeschlichen. Klicken Sie auf die orangefarbenen Wörter und wählen Sie die grammatikalisch richtige Form aus.
+    </div>
+
+    <div class="proofreading-box">
+        Сегодня мы гуляли в парке. Сначала мы увидели 
+        <select onchange="validate(this)" data-answer="собачий">
+            <option value="собакий">собакий</option>
+            <option value="собачий">собачий</option>
+            <option value="собачя">собачя</option>
+        </select> 
+        хвост за деревом. Потом мы нашли 
+        <select onchange="validate(this)" data-answer="птичье">
+            <option value="птиче">птиче</option>
+            <option value="птичье">птичье</option>
+            <option value="птичья">птичья</option>
+        </select> 
+        гнездо. В гнезде лежало 
+        <select onchange="validate(this)" data-answer="птичье">
+            <option value="птиче">птиче</option>
+            <option value="птичье">птичье</option>
+            <option value="птичьи">птичьи</option>
+        </select> 
+        перо. Бабушка сказала: „Это 
+        <select onchange="validate(this)" data-answer="воронье">
+            <option value="вороне">вороне</option>
+            <option value="вороний">вороний</option>
+            <option value="воронье">воронье</option>
+        </select> 
+        перо“. <br>
+        На дорожке были 
+        <select onchange="validate(this)" data-answer="лисьи">
+            <option value="лисии">лисии</option>
+            <option value="лисьи">лисьи</option>
+            <option value="лися">лися</option>
+        </select> 
+        следы. Мы подумали, что это 
+        <select onchange="validate(this)" data-answer="лисья">
+            <option value="лися">лися</option>
+            <option value="лисья">лисья</option>
+            <option value="лисе">лисе</option>
+        </select> 
+        нора где-то рядом. <br>
+        У входа в зоопарк висели 
+        <select onchange="validate(this)" data-answer="оленьи">
+            <option value="олении">олении</option>
+            <option value="оленьи">оленьи</option>
+            <option value="оленья">оленья</option>
+        </select> 
+        рога. Мы купили 
+        <select onchange="validate(this)" data-answer="рыбий">
+            <option value="рыбий">рыбий</option>
+            <option value="рыбьи">рыбьи</option>
+            <option value="рыбе">рыбе</option>
+        </select> 
+        жир в аптеке и пошли смотреть зверей. В клетке сидела обезьяна, её 
+        <select onchange="validate(this)" data-answer="обезьянья">
+            <option value="обезьяня">обезьяня</option>
+            <option value="обезьянья">обезьянья</option>
+            <option value="обезьяний">обезьяний</option>
+        </select> 
+        мордочка была очень смешной. <br>
+        Мы видели 
+        <select onchange="validate(this)" data-answer="медвежий">
+            <option value="медведий">медведий</option>
+            <option value="медвежий">медвежий</option>
+            <option value="медвежье">медвежье</option>
+        </select> 
+        сон (так говорят, когда кто-то крепко спит). Рядом была 
+        <select onchange="validate(this)" data-answer="волчья">
+            <option value="волкия">волкия</option>
+            <option value="волчья">волчья</option>
+            <option value="волчя">волчя</option>
+        </select> 
+        стая. <br>
+        Вечером мы пили 
+        <select onchange="validate(this)" data-answer="коровье">
+            <option value="корове">корове</option>
+            <option value="коровье">коровье</option>
+            <option value="коровий">коровий</option>
+        </select> 
+        молоко и ели 
+        <select onchange="validate(this)" data-answer="овечий">
+            <option value="овечий">овечий</option>
+            <option value="овеций">овеций</option>
+            <option value="овечья">овечья</option>
+        </select> 
+        сыр. У папы разболелся зуб, и он использовал 
+        <select onchange="validate(this)" data-answer="змеиный">
+            <option value="змеиний">змеиний</option>
+            <option value="змеиный">змеиный</option>
+            <option value="змеиня">змеиня</option>
+        </select> 
+        яд как лекарство. Это был настоящий 
+        <select onchange="validate(this)" data-answer="заячий">
+            <option value="заячий">заячий</option>
+            <option value="заяций">заяций</option>
+            <option value="заячья">заячья</option>
+        </select> 
+        день, полный приключений!
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="btn-sol" onclick="solveAll()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function validate(el) {
+        const correctAnswer = el.getAttribute('data-answer');
+        if (el.value === correctAnswer) {
+            el.className = "correct";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function resetAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = s.options[0].value; // Zurück zum ersten (falschen) Eintrag
+            s.className = "";
+        });
+    }
+
+    function solveAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = s.getAttribute('data-answer');
+            s.className = "correct";
+        });
+    }
+
+    // Initialisierung: Wir mischen die Optionen nicht, 
+    // aber wir stellen sicher, dass am Anfang nichts als "correct" markiert ist.
+    window.onload = function() {
+        resetAll();
+    };
+</script>
+
+</body>
+</html>
