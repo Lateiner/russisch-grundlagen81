@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Arbeitsblatt: Russische Possessivadjektive</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 { text-align: center; margin: 0; }
+        h1 { color: var(--primary-color); font-size: 1.8rem; }
+        h2 { color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 30px; font-weight: 400; }
+
+        .explanation {
+            background: #f0f7ff;
+            padding: 25px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 40px;
+            border-radius: 4px;
+        }
+
+        .explanation h3 { margin-top: 0; color: var(--secondary-color); }
+
+        .task-section {
+            margin-bottom: 50px;
+            padding: 20px;
+            border: 1px solid #e1e8ed;
+            border-radius: var(--border-radius);
+        }
+
+        .task-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: block;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .label-text { min-width: 320px; }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            font-size: 1rem;
+            background-color: white;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        /* Feedback-Farben */
+        .correct { border-color: var(--success-color) !important; background-color: #e8f5e9 !important; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #ffebee !important; }
+
+        .btn-group {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #ecf0f1; color: #7f8c8d; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.8; }
+
+        /* Drag and Drop */
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            min-height: 50px;
+        }
+
+        .draggable {
+            background: white;
+            border: 1px solid var(--secondary-color);
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drop-zone {
+            width: 160px;
+            height: 38px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.correct { border-style: solid; border-color: var(--success-color); background-color: #e8f5e9; }
+        .drop-zone.incorrect { border-style: solid; border-color: var(--error-color); background-color: #ffebee; }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .row { flex-direction: column; align-items: flex-start; }
+            .label-text { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Possessive Adjektive auf -ИЙ, -ЬЯ, -ЬЕ, -ЬИ</h2>
+
+    <div class="explanation">
+        <h3>Anleitung & Erklärung</h3>
+        <p>Diese Adjektive drücken eine <strong>allgemeine Zugehörigkeit</strong> zu einer Gattung oder Art aus (z. B. „ein Hundeschwanz“ im Allgemeinen).</p>
+        <ul>
+            <li><strong>Männlich:</strong> Endung <strong>-ИЙ</strong> (СОБАЧИЙ ХВОСТ)</li>
+            <li><strong>Weiblich:</strong> Endung <strong>-ЬЯ</strong> (КОШАЧЬЯ МИСКА)</li>
+            <li><strong>Sächlich:</strong> Endung <strong>-ЬЕ</strong> (ПТИЧЬЕ ЗЕРНО)</li>
+            <li><strong>Plural:</strong> Endung <strong>-ЬИ</strong> (ЛИСЬИ УШИ)</li>
+        </ul>
+        <p>Achten Sie auf Konsonantenwechsel: <strong>К → Ч</strong>, <strong>Х → Ш</strong>, <strong>Ц → Ч</strong>, <strong>Д → Ж</strong>.</p>
+    </div>
+
+    <!-- SEKTION 1: Aufgaben 1-7 -->
+    <div class="task-section" id="section-1">
+        <span class="task-title">Aufgaben 1-7: Wählen Sie die richtige Endung passend zum Genus/Numerus.</span>
+        
+        <div class="row">
+            <span class="label-text">1. (медведь) _______ берлога (f.)</span>
+            <select onchange="validate(this)" data-answer="МЕДВЕЖЬЯ">
+                <option value="">-- wählen --</option>
+                <option value="МЕДВЕЖИЙ">МЕДВЕЖИЙ</option>
+                <option value="МЕДВЕЖЬЯ">МЕДВЕЖЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">2. (волк) _______ зубы (pl.)</span>
+            <select onchange="validate(this)" data-answer="ВОЛЧЬИ">
+                <option value="">-- wählen --</option>
+                <option value="ВОЛЧИЙ">ВОЛЧИЙ</option>
+                <option value="ВОЛЧЬИ">ВОЛЧЬИ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">3. (верблюд) _______ молоко (n.)</span>
+            <select onchange="validate(this)" data-answer="ВЕРБЛЮЖЬЕ">
+                <option value="">-- wählen --</option>
+                <option value="ВЕРБЛЮЖИЙ">ВЕРБЛЮЖИЙ</option>
+                <option value="ВЕРБЛЮЖЬЕ">ВЕРБЛЮЖЬЕ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">4. (олень) _______ рог (m.)</span>
+            <select onchange="validate(this)" data-answer="ОЛЕНИЙ">
+                <option value="">-- wählen --</option>
+                <option value="ОЛЕНИЙ">ОЛЕНИЙ</option>
+                <option value="ОЛЕНЬЯ">ОЛЕНЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">5. (лиса) _______ хитрость (f.)</span>
+            <select onchange="validate(this)" data-answer="ЛИСЬЯ">
+                <option value="">-- wählen --</option>
+                <option value="ЛИСИЙ">ЛИСИЙ</option>
+                <option value="ЛИСЬЯ">ЛИСЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">6. (заяц) _______ лапа (f.)</span>
+            <select onchange="validate(this)" data-answer="ЗАЯЧЬЯ">
+                <option value="">-- wählen --</option>
+                <option value="ЗАЯЧИЙ">ЗАЯЧИЙ</option>
+                <option value="ЗАЯЧЬЯ">ЗАЯЧЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">7. (баран) _______ рога (pl.)</span>
+            <select onchange="validate(this)" data-answer="БАРАНЬИ">
+                <option value="">-- wählen --</option>
+                <option value="БАРАНИЙ">БАРАНИЙ</option>
+                <option value="БАРАНЬИ">БАРАНЬИ</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetSection('section-1')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveSection('section-1')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- SEKTION 2: Aufgaben 8-14 -->
+    <div class="task-section" id="section-2">
+        <span class="task-title">Aufgaben 8-14: Konkret oder Allgemein? Wählen Sie die richtige Form.</span>
+        
+        <div class="row">
+            <span class="label-text">8. Das ist der Napf meiner Katze:</span>
+            <select onchange="validate(this)" data-answer="КОШКИН">
+                <option value="">-- wählen --</option>
+                <option value="КОШКИН">КОШКИН</option>
+                <option value="КОШАЧИЙ">КОШАЧИЙ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">9. Ein allgemeiner „Katzenjammer“:</span>
+            <select onchange="validate(this)" data-answer="КОШАЧИЙ">
+                <option value="">-- wählen --</option>
+                <option value="КОШКИН">КОШКИН</option>
+                <option value="КОШАЧИЙ">КОШАЧИЙ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">10. Die Federn dieses (speziellen) Vogels:</span>
+            <select onchange="validate(this)" data-answer="ПТИЦЫНЫ">
+                <option value="">-- wählen --</option>
+                <option value="ПТИЦЫНЫ">ПТИЦЫНЫ</option>
+                <option value="ПТИЧЬИ">ПТИЧЬИ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">11. Eine allgemeine „Vogelperspektive“:</span>
+            <select onchange="validate(this)" data-answer="ПТИЧИЙ">
+                <option value="">-- wählen --</option>
+                <option value="ПТИЦЫН">ПТИЦЫН</option>
+                <option value="ПТИЧИЙ">ПТИЧИЙ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">12. Die Hütte dieses (einen) Hundes:</span>
+            <select onchange="validate(this)" data-answer="СОБАКИНА">
+                <option value="">-- wählen --</option>
+                <option value="СОБАКИНА">СОБАКИНА</option>
+                <option value="СОБАЧЬЯ">СОБАЧЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">13. Ein allgemeines „Hundeleben“:</span>
+            <select onchange="validate(this)" data-answer="СОБАЧЬЯ">
+                <option value="">-- wählen --</option>
+                <option value="СОБАКИНА">СОБАКИНА</option>
+                <option value="СОБАЧЬЯ">СОБАЧЬЯ</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <span class="label-text">14. Die List eines (allgemeinen) Fuchses:</span>
+            <select onchange="validate(this)" data-answer="ЛИСЬЯ">
+                <option value="">-- wählen --</option>
+                <option value="ЛИСИЦЫНА">ЛИСИЦЫНА</option>
+                <option value="ЛИСЬЯ">ЛИСЬЯ</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetSection('section-2')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveSection('section-2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- SEKTION 3: Aufgaben 15-20 -->
+    <div class="task-section" id="section-3">
+        <span class="task-title">Aufgaben 15-20: Ziehen Sie das Adjektiv zum passenden Tiernamen.</span>
+        
+        <div class="drag-container" id="drag-source-3">
+            <div class="draggable" draggable="true" id="d1">КОШАЧИЙ</div>
+            <div class="draggable" draggable="true" id="d2">БЕЛИЧИЙ</div>
+            <div class="draggable" draggable="true" id="d3">ОВЕЧИЙ</div>
+            <div class="draggable" draggable="true" id="d4">ЧЕРЕПАШИЙ</div>
+            <div class="draggable" draggable="true" id="d5">РЫБИЙ</div>
+            <div class="draggable" draggable="true" id="d6">СЛОНОВИЙ</div>
+        </div>
+
+        <div class="row"><span class="label-text">15. КОШКА (Katze)</span> <div class="drop-zone" data-answer="КОШАЧИЙ"></div></div>
+        <div class="row"><span class="label-text">16. БЕЛКА (Eichhörnchen)</span> <div class="drop-zone" data-answer="БЕЛИЧИЙ"></div></div>
+        <div class="row"><span class="label-text">17. ОВЦА (Schaf)</span> <div class="drop-zone" data-answer="ОВЕЧИЙ"></div></div>
+        <div class="row"><span class="label-text">18. ЧЕРЕПАХА (Schildkröte)</span> <div class="drop-zone" data-answer="ЧЕРЕПАШИЙ"></div></div>
+        <div class="row"><span class="label-text">19. РЫБА (Fisch)</span> <div class="drop-zone" data-answer="РЫБИЙ"></div></div>
+        <div class="row"><span class="label-text">20. СЛОН (Elefant)</span> <div class="drop-zone" data-answer="СЛОНОВИЙ"></div></div>
+
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetDrag('section-3')">Zurücksetzen & Mischen</button>
+            <button class="btn-sol" onclick="solveDrag('section-3')">Lösung anzeigen</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Validierung für Select-Felder ---
+    function validate(el) {
+        const answer = el.getAttribute('data-answer');
+        if (el.value === "") {
+            el.className = "";
+        } else if (el.value === answer) {
+            el.className = "correct";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function solveSection(sectionId) {
+        document.getElementById(sectionId).querySelectorAll('select').forEach(s => {
+            s.value = s.getAttribute('data-answer');
+            s.className = "correct";
+        });
+    }
+
+    function resetSection(sectionId) {
+        document.getElementById(sectionId).querySelectorAll('select').forEach(s => {
+            s.value = "";
+            s.className = "";
+        });
+    }
+
+    // --- Drag & Drop Logik ---
+    let draggedItem = null;
+
+    document.querySelectorAll('.draggable').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = item;
+            setTimeout(() => item.style.opacity = '0.5', 0);
+        });
+        item.addEventListener('dragend', function() {
+            if(draggedItem) draggedItem.style.opacity = '1';
+            draggedItem = null;
+        });
+    });
+
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', e => e.preventDefault());
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (this.childNodes.length === 0) {
+                this.appendChild(draggedItem);
+                validateDrag(this);
+            }
+        });
+    });
+
+    function validateDrag(zone) {
+        if (zone.innerText.trim() === zone.getAttribute('data-answer')) {
+            zone.className = "drop-zone correct";
+        } else {
+            zone.className = "drop-zone incorrect";
+        }
+    }
+
+    // Shuffle Funktion
+    function shuffleContainer(containerId) {
+        const container = document.getElementById(containerId);
+        const children = Array.from(container.children);
+        children.sort(() => Math.random() - 0.5);
+        children.forEach(child => container.appendChild(child));
+    }
+
+    function resetDrag(sectionId) {
+        const source = document.getElementById('drag-source-3');
+        document.getElementById(sectionId).querySelectorAll('.drop-zone').forEach(zone => {
+            while (zone.firstChild) {
+                source.appendChild(zone.firstChild);
+            }
+            zone.className = "drop-zone";
+        });
+        shuffleContainer('drag-source-3');
+    }
+
+    function solveDrag(sectionId) {
+        const section = document.getElementById(sectionId);
+        const source = document.getElementById('drag-source-3');
+        const zones = section.querySelectorAll('.drop-zone');
+        const items = section.querySelectorAll('.draggable');
+
+        // Zuerst alles zurück in die Quelle
+        zones.forEach(zone => {
+            while (zone.firstChild) { source.appendChild(zone.firstChild); }
+        });
+
+        // Dann korrekt in die Zonen setzen
+        zones.forEach(zone => {
+            const correctText = zone.getAttribute('data-answer');
+            const correctItem = Array.from(items).find(item => item.innerText.trim() === correctText);
+            if (correctItem) {
+                zone.appendChild(correctItem);
+                zone.className = "drop-zone correct";
+            }
+        });
+    }
+
+    // Beim Laden einmal mischen
+    window.onload = () => shuffleContainer('drag-source-3');
+</script>
+
+</body>
+</html>
