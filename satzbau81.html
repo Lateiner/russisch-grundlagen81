@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satzbau-Puzzle: 15 interaktive Übungen</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; font-size: 1.6rem; color: var(--primary-color); margin-bottom: 5px; }
+        h2 { text-align: center; font-size: 1.2rem; color: var(--secondary-color); font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .puzzle-card {
+            background: #fff;
+            border: 1px solid #e1e8ed;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .instruction-small {
+            display: block;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .word-pool, .result-area {
+            min-height: 60px;
+            padding: 10px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            align-items: center;
+        }
+
+        .result-area {
+            border: 2px solid var(--secondary-color);
+            background: #fff;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Feedback-Farben */
+        .result-area.correct { 
+            border-color: var(--success-color); 
+            background-color: #e8f5e9; 
+        }
+        .result-area.incorrect { 
+            border-color: var(--error-color); 
+            background-color: #ffebee; 
+        }
+
+        .word-btn {
+            background: #fff;
+            border: 1px solid var(--secondary-color);
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .word-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        .action-btn:hover { opacity: 0.8; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .word-btn { padding: 6px 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 6</h1>
+    <h2>Satzbau-Puzzle (15 Sätze)</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Bilden Sie korrekte russische Sätze. 
+        Klicken Sie ein Wort an, um es nach oben zu schieben. Sobald der Satz vollständig ist, erhalten Sie sofort Feedback (Grün = Richtig, Rot = Falsch).
+    </div>
+
+    <div id="puzzles-container">
+        <!-- Inhalte werden per JS geladen -->
+    </div>
+</div>
+
+<script>
+    const puzzleData = [
+        { id: 1, correct: "Собачий хвост очень длинный", words: ["Собачий", "хвост", "очень", "длинный"] },
+        { id: 2, correct: "Кошачья миска стоит на кухне", words: ["Кошачья", "миска", "стоит", "на", "кухне"] },
+        { id: 3, correct: "Птичье гнездо висит на дереве", words: ["Птичье", "гнездо", "висит", "на", "дереве"] },
+        { id: 4, correct: "Лисьи уши очень острые", words: ["Лисьи", "уши", "очень", "острые"] },
+        { id: 5, correct: "Медвежья берлога находится в лесу", words: ["Медвежья", "берлога", "находится", "в", "лесу"] },
+        { id: 6, correct: "Овечья шерсть нужна для свитера", words: ["Овечья", "шерсть", "нужна", "для", "свитера"] },
+        { id: 7, correct: "Рыбий жир полезен для здоровья", words: ["Рыбий", "жир", "полезен", "для", "здоровья"] },
+        { id: 8, correct: "Заячьи следы видны на снегу", words: ["Заячьи", "следы", "видны", "на", "снегу"] },
+        { id: 9, correct: "Волчья стая бежит по лесу", words: ["Волчья", "стая", "бежит", "по", "лесу"] },
+        { id: 10, correct: "Верблюжий горб хранит запасы жира", words: ["Верблюжий", "горб", "хранит", "запасы", "жира"] },
+        { id: 11, correct: "Коровий колокольчик громко звенит", words: ["Коровий", "колокольчик", "громко", "звенит"] },
+        { id: 12, correct: "Змеиный яд используют как лекарство", words: ["Змеиный", "яд", "используют", "как", "лекарство"] },
+        { id: 13, correct: "Оленья кожа очень прочная", words: ["Оленья", "кожа", "очень", "прочная"] },
+        { id: 14, correct: "Беличий хвост пушистый и красивый", words: ["Беличий", "хвост", "пушистый", "и", "красивый"] },
+        { id: 15, correct: "Слоновий хобот помогает пить воду", words: ["Слоновий", "хобот", "помогает", "пить", "воду"] }
+    ];
+
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function createPuzzle(data) {
+        const container = document.getElementById('puzzles-container');
+        
+        const card = document.createElement('div');
+        card.className = 'puzzle-card';
+        card.id = `card-${data.id}`;
+
+        const instruction = document.createElement('span');
+        instruction.className = 'instruction-small';
+        instruction.textContent = `Satz ${data.id}:`;
+        card.appendChild(instruction);
+
+        const resultArea = document.createElement('div');
+        resultArea.className = 'result-area';
+        resultArea.id = `result-${data.id}`;
+        card.appendChild(resultArea);
+
+        const poolArea = document.createElement('div');
+        poolArea.className = 'word-pool';
+        poolArea.id = `pool-${data.id}`;
+        card.appendChild(poolArea);
+
+        // Worte mischen und Buttons erstellen
+        const shuffledWords = shuffle([...data.words]);
+        shuffledWords.forEach(wordText => {
+            const btn = document.createElement('button');
+            btn.className = 'word-btn';
+            btn.textContent = wordText;
+            btn.onclick = () => moveWord(btn, poolArea, resultArea, data);
+            poolArea.appendChild(btn);
+        });
+
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'action-btn btn-reset';
+        resetBtn.textContent = 'Zurücksetzen';
+        resetBtn.onclick = () => resetPuzzle(data.id, data.words, data);
+
+        const solBtn = document.createElement('button');
+        solBtn.className = 'action-btn btn-sol';
+        solBtn.textContent = 'Lösung anzeigen';
+        solBtn.onclick = () => showSolution(data.id, data.correct, data);
+
+        btnGroup.appendChild(resetBtn);
+        btnGroup.appendChild(solBtn);
+        card.appendChild(btnGroup);
+
+        container.appendChild(card);
+    }
+
+    function moveWord(btn, pool, result, data) {
+        const parent = btn.parentElement;
+        if (parent.id.startsWith('pool')) {
+            result.appendChild(btn);
+        } else {
+            pool.appendChild(btn);
+        }
+        validateSentence(data.id, data.correct, data.words.length);
+    }
+
+    function validateSentence(id, correctSentence, totalWords) {
+        const resultArea = document.getElementById(`result-${id}`);
+        const currentWords = Array.from(resultArea.children).map(btn => btn.textContent);
+        
+        // Feedback nur geben, wenn alle Wörter oben sind
+        if (currentWords.length === totalWords) {
+            const currentSentence = currentWords.join(' ');
+            if (currentSentence === correctSentence) {
+                resultArea.classList.remove('incorrect');
+                resultArea.classList.add('correct');
+            } else {
+                resultArea.classList.remove('correct');
+                resultArea.classList.add('incorrect');
+            }
+        } else {
+            // Noch nicht vollständig -> Neutral
+            resultArea.classList.remove('correct', 'incorrect');
+        }
+    }
+
+    function resetPuzzle(id, originalWords, data) {
+        const pool = document.getElementById(`pool-${id}`);
+        const result = document.getElementById(`result-${id}`);
+        
+        // Alle Wörter zurück in den Pool
+        const allBtns = [...Array.from(pool.children), ...Array.from(result.children)];
+        result.innerHTML = '';
+        pool.innerHTML = '';
+        result.classList.remove('correct', 'incorrect');
+
+        shuffle(allBtns).forEach(btn => pool.appendChild(btn));
+    }
+
+    function showSolution(id, correctSentence, data) {
+        const pool = document.getElementById(`pool-${id}`);
+        const result = document.getElementById(`result-${id}`);
+        
+        result.innerHTML = '';
+        pool.innerHTML = '';
+        
+        const wordsArr = correctSentence.split(' ');
+        wordsArr.forEach(wordText => {
+            const btn = document.createElement('button');
+            btn.className = 'word-btn';
+            btn.textContent = wordText;
+            btn.onclick = () => moveWord(btn, pool, result, data);
+            result.appendChild(btn);
+        });
+        
+        result.classList.add('correct');
+        result.classList.remove('incorrect');
+    }
+
+    // Initialisierung
+    puzzleData.forEach(createPuzzle);
+</script>
+
+</body>
+</html>
