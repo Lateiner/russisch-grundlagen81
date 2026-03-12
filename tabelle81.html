@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deklination: Russische Possessivadjektive</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { text-align: center; color: var(--secondary-color); font-size: 1.2rem; font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto; /* Wichtig für Responsivität auf Smartphones */
+            margin-bottom: 30px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px; /* Verhindert Quetschen auf kleinen Schirmen */
+            background: #fff;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .case-label {
+            text-align: left;
+            background-color: #f8f9fa;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .stem {
+            color: #7f8c8d;
+            font-family: monospace;
+            font-weight: normal;
+        }
+
+        select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 2px solid #ccc;
+            font-size: 0.95rem;
+            width: 100px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        select.correct { border-color: var(--success-color); background-color: #e8f5e9; }
+        select.incorrect { border-color: var(--error-color); background-color: #ffebee; }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 10</h1>
+    <h2>Interaktive Deklinations-Tabelle (Adjektiv: ЛИСИЙ)</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Deklinieren Sie das Adjektiv <strong>ЛИСИЙ</strong> (Fuchs-). <br>
+        Achten Sie darauf, dass das Weichheitszeichen <strong>Ь</strong> in fast allen Formen (außer Nominativ Maskulinum) erhalten bleibt! <br>
+        Wählen Sie die korrekte Endung für jeden Fall aus.
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Kasus (Fall)</th>
+                    <th>Maskulin (m.)</th>
+                    <th>Feminin (f.)</th>
+                    <th>Neutrum (n.)</th>
+                    <th>Plural (pl.)</th>
+                </tr>
+            </thead>
+            <tbody id="declension-body">
+                <!-- Nominativ -->
+                <tr>
+                    <td class="case-label">Именительный (Nom.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ИЙ">
+                        <option value="">...</option><option value="ИЙ">ИЙ</option><option value="ЬЯ">ЬЯ</option><option value="ЬЕ">ЬЕ</option><option value="ЬИ">ЬИ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЯ">
+                        <option value="">...</option><option value="ЬЯ">ЬЯ</option><option value="Я">Я</option><option value="ИЯ">ИЯ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕ">
+                        <option value="">...</option><option value="ЬЕ">ЬЕ</option><option value="Е">Е</option><option value="ИЕ">ИЕ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИ">
+                        <option value="">...</option><option value="ЬИ">ЬИ</option><option value="И">И</option><option value="ИИ">ИИ</option>
+                    </select></td>
+                </tr>
+                <!-- Genitiv -->
+                <tr>
+                    <td class="case-label">Родительный (Gen.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕГО">
+                        <option value="">...</option><option value="ЕГО">ЕГО</option><option value="ЬЕГО">ЬЕГО</option><option value="ИЙ">ИЙ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕЙ">
+                        <option value="">...</option><option value="ЕЙ">ЕЙ</option><option value="ЬЕЙ">ЬЕЙ</option><option value="ЬЮ">ЬЮ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕГО">
+                        <option value="">...</option><option value="ЕГО">ЕГО</option><option value="ЬЕГО">ЬЕГО</option><option value="ЬИХ">ЬИХ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИХ">
+                        <option value="">...</option><option value="ИХ">ИХ</option><option value="ЬИХ">ЬИХ</option><option value="ЬИМИ">ЬИМИ</option>
+                    </select></td>
+                </tr>
+                <!-- Dativ -->
+                <tr>
+                    <td class="case-label">Дательный (Dat.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕМУ">
+                        <option value="">...</option><option value="ЕМУ">ЕМУ</option><option value="ЬЕМУ">ЬЕМУ</option><option value="ЬИМ">ЬИМ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕЙ">
+                        <option value="">...</option><option value="ЕЙ">ЕЙ</option><option value="ЬЕЙ">ЬЕЙ</option><option value="ЬИ">ЬИ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕМУ">
+                        <option value="">...</option><option value="ЕМУ">ЕМУ</option><option value="ЬЕМУ">ЬЕМУ</option><option value="ЬЕГО">ЬЕГО</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИМ">
+                        <option value="">...</option><option value="ИМ">ИМ</option><option value="ЬИМ">ЬИМ</option><option value="ЬИМИ">ЬИМИ</option>
+                    </select></td>
+                </tr>
+                <!-- Akkusativ -->
+                <tr>
+                    <td class="case-label">Винительный (Akk.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ИЙ">
+                        <option value="">...</option><option value="ИЙ">ИЙ</option><option value="ЬЕГО">ЬЕГО</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЮ">
+                        <option value="">...</option><option value="Ю">Ю</option><option value="ЬЮ">ЬЮ</option><option value="ЬЯ">ЬЯ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕ">
+                        <option value="">...</option><option value="ЬЕ">ЬЕ</option><option value="Е">Е</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИ">
+                        <option value="">...</option><option value="И">И</option><option value="ЬИ">ЬИ</option><option value="ЬИХ">ЬИХ</option>
+                    </select></td>
+                </tr>
+                <!-- Instrumental -->
+                <tr>
+                    <td class="case-label">Творительный (Inst.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИМ">
+                        <option value="">...</option><option value="ИМ">ИМ</option><option value="ЬИМ">ЬИМ</option><option value="ЬЕМУ">ЬЕМУ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕЙ">
+                        <option value="">...</option><option value="ЕЙ">ЕЙ</option><option value="ЬЕЙ">ЬЕЙ</option><option value="ЬЮ">ЬЮ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИМ">
+                        <option value="">...</option><option value="ИМ">ИМ</option><option value="ЬИМ">ЬИМ</option><option value="ЬИ">ЬИ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИМИ">
+                        <option value="">...</option><option value="ИМИ">ИМИ</option><option value="ЬИМИ">ЬИМИ</option><option value="ЬИХ">ЬИХ</option>
+                    </select></td>
+                </tr>
+                <!-- Präpositiv -->
+                <tr>
+                    <td class="case-label">Предложный (Präp.)</td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕМ">
+                        <option value="">...</option><option value="ЕМ">ЕМ</option><option value="ЬЕМ">ЬЕМ</option><option value="ЬИМ">ЬИМ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕЙ">
+                        <option value="">...</option><option value="ЕЙ">ЕЙ</option><option value="ЬЕЙ">ЬЕЙ</option><option value="ЬЯ">ЬЯ</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬЕМ">
+                        <option value="">...</option><option value="ЕМ">ЕМ</option><option value="ЬЕМ">ЬЕМ</option><option value="ЬЕГО">ЬЕГО</option>
+                    </select></td>
+                    <td><span class="stem">ЛИС-</span><select onchange="validate(this)" data-answer="ЬИХ">
+                        <option value="">...</option><option value="ИХ">ИХ</option><option value="ЬИХ">ЬИХ</option><option value="ЬИ">ЬИ</option>
+                    </select></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="btn-sol" onclick="solveAll()">Lösung anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function validate(el) {
+        const correctAnswer = el.getAttribute('data-answer');
+        if (el.value === "") {
+            el.className = "";
+        } else if (el.value === correctAnswer) {
+            el.className = "correct";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function resetAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = "";
+            s.className = "";
+        });
+    }
+
+    function solveAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = s.getAttribute('data-answer');
+            s.className = "correct";
+        });
+    }
+</script>
+
+</body>
+</html>
