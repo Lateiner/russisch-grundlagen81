@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio-Diktat: Russische Possessivadjektive</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 10px;
+            padding-bottom: 260px; /* Platz für Tastatur */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; font-size: 1.6rem; color: var(--primary-color); margin-bottom: 5px; }
+        h2 { text-align: center; font-size: 1.1rem; color: var(--secondary-color); font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .dictation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .audio-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .audio-btn:hover { transform: scale(1.1); background-color: #2980b9; }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+            flex-wrap: wrap;
+        }
+
+        .word-input {
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            width: 150px;
+            text-align: center;
+            background-color: #fff;
+            outline: none;
+            readOnly: true; 
+        }
+
+        .word-input.correct { border-color: var(--success-color) !important; background-color: #e8f5e9 !important; }
+        .word-input.incorrect { border-color: var(--error-color) !important; background-color: #ffebee !important; }
+        .word-input.active { border-color: var(--secondary-color); box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
+
+        .context-text { font-size: 1.1rem; font-weight: bold; min-width: 60px; }
+        .translation-text { font-size: 0.95rem; color: #7f8c8d; font-style: italic; }
+
+        /* Virtuelle Tastatur */
+        .keyboard-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #d1d4d9;
+            padding: 10px 5px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 6px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .key {
+            background: white;
+            border: none;
+            padding: 12px 0;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 2px 0 #999;
+            user-select: none;
+            text-align: center;
+        }
+
+        .key:active { transform: translateY(2px); box-shadow: none; background: #eee; }
+        .key.special { background: #adb5bd; flex: 1.5; font-size: 0.9rem; }
+        .key.highlight { background: #fff3cd; border: 1px solid #ffeeba; font-weight: bold; color: #856404; }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        .action-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .key { padding: 10px 0; font-size: 1rem; }
+            .word-input { width: 120px; }
+            .translation-text { width: 100%; margin-top: -5px; }
+            body { padding-bottom: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Audio-Diktat: Possessivadjektive</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Klicken Sie auf 🔊 für die russische Aussprache (männliche Stimme). 
+        Tippen Sie das passende Adjektiv mit der Tastatur unten ein.
+    </div>
+
+    <div id="exercises">
+        <!-- 15 Items mit Übersetzung -->
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('собачий лай', 1)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-1" data-answer="собачий" onmousedown="setCurrentInput(this)">
+                <span class="context-text">лай</span>
+                <span class="translation-text">(Hundebellen)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('кошачья миска', 2)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-2" data-answer="кошачья" onmousedown="setCurrentInput(this)">
+                <span class="context-text">миска</span>
+                <span class="translation-text">(Katzennapf)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('птичье гнездо', 3)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-3" data-answer="птичье" onmousedown="setCurrentInput(this)">
+                <span class="context-text">гнездо</span>
+                <span class="translation-text">(Vogelnest)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('лисьи следы', 4)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-4" data-answer="лисьи" onmousedown="setCurrentInput(this)">
+                <span class="context-text">следы</span>
+                <span class="translation-text">(Fuchsspuren)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('волчий аппетит', 5)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-5" data-answer="волчий" onmousedown="setCurrentInput(this)">
+                <span class="context-text">аппетит</span>
+                <span class="translation-text">(Wolfshunger)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('медвежья берлога', 6)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-6" data-answer="медвежья" onmousedown="setCurrentInput(this)">
+                <span class="context-text">берлога</span>
+                <span class="translation-text">(Bärenhöhle)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('заячьи уши', 7)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-7" data-answer="заячьи" onmousedown="setCurrentInput(this)">
+                <span class="context-text">уши</span>
+                <span class="translation-text">(Hasenohren)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('овечий сыр', 8)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-8" data-answer="овечий" onmousedown="setCurrentInput(this)">
+                <span class="context-text">сыр</span>
+                <span class="translation-text">(Schafskäse)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('беличий хвост', 9)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-9" data-answer="беличий" onmousedown="setCurrentInput(this)">
+                <span class="context-text">хвост</span>
+                <span class="translation-text">(Eichhörnchenschwanz)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('олений рог', 10)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-10" data-answer="олений" onmousedown="setCurrentInput(this)">
+                <span class="context-text">рог</span>
+                <span class="translation-text">(Hirschgeweih)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('рыбий жир', 11)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-11" data-answer="рыбий" onmousedown="setCurrentInput(this)">
+                <span class="context-text">жир</span>
+                <span class="translation-text">(Fischöl)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('змеиный яд', 12)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-12" data-answer="змеиный" onmousedown="setCurrentInput(this)">
+                <span class="context-text">яд</span>
+                <span class="translation-text">(Schlangengift)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('куриное яйцо', 13)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-13" data-answer="куриное" onmousedown="setCurrentInput(this)">
+                <span class="context-text">яйцо</span>
+                <span class="translation-text">(Hühnerei)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('воронье крыло', 14)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-14" data-answer="воронье" onmousedown="setCurrentInput(this)">
+                <span class="context-text">крыло</span>
+                <span class="translation-text">(Krähenflügel)</span>
+            </div>
+        </div>
+        <div class="dictation-item">
+            <button class="audio-btn" onclick="playAudio('коровье молоко', 15)">🔊</button>
+            <div class="input-wrapper">
+                <input type="text" class="word-input" id="input-15" data-answer="коровье" onmousedown="setCurrentInput(this)">
+                <span class="context-text">молоко</span>
+                <span class="translation-text">(Kuhmilch)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="action-btn btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="action-btn btn-sol" onclick="solveAll()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<!-- Tastatur -->
+<div class="keyboard-panel" onmousedown="event.preventDefault();">
+    <div class="keyboard-row">
+        <button class="key" onclick="typeChar('й')">й</button><button class="key" onclick="typeChar('ц')">ц</button><button class="key" onclick="typeChar('у')">у</button><button class="key" onclick="typeChar('к')">к</button><button class="key" onclick="typeChar('е')">е</button><button class="key" onclick="typeChar('н')">н</button><button class="key" onclick="typeChar('г')">г</button><button class="key" onclick="typeChar('ш')">ш</button><button class="key" onclick="typeChar('щ')">щ</button><button class="key" onclick="typeChar('з')">з</button><button class="key" onclick="typeChar('х')">х</button>
+    </div>
+    <div class="keyboard-row">
+        <button class="key" onclick="typeChar('ф')">ф</button><button class="key" onclick="typeChar('ы')">ы</button><button class="key" onclick="typeChar('в')">в</button><button class="key" onclick="typeChar('а')">а</button><button class="key" onclick="typeChar('п')">п</button><button class="key" onclick="typeChar('р')">р</button><button class="key" onclick="typeChar('о')">о</button><button class="key" onclick="typeChar('л')">л</button><button class="key" onclick="typeChar('д')">д</button><button class="key" onclick="typeChar('ж')">ж</button><button class="key" onclick="typeChar('э')">э</button>
+    </div>
+    <div class="keyboard-row">
+        <button class="key" onclick="typeChar('я')">я</button><button class="key" onclick="typeChar('ч')">ч</button><button class="key" onclick="typeChar('с')">с</button><button class="key" onclick="typeChar('м')">м</button><button class="key" onclick="typeChar('и')">и</button><button class="key" onclick="typeChar('т')">т</button><button class="key highlight" onclick="typeChar('ь')">ь</button><button class="key" onclick="typeChar('б')">б</button><button class="key" onclick="typeChar('ю')">ю</button>
+        <button class="key special" onclick="backspace()">⌫</button>
+    </div>
+</div>
+
+<script>
+    let activeInput = null;
+    let maleVoice = null;
+
+    function loadVoices() {
+        let voices = window.speechSynthesis.getVoices();
+        // Suche nach russischer männlicher Stimme
+        maleVoice = voices.find(v => v.lang.startsWith('ru') && 
+            (v.name.toLowerCase().includes('male') || 
+             v.name.includes('Dmitry') || 
+             v.name.includes('Maxim') || 
+             v.name.includes('Pavel'))) || 
+            voices.find(v => v.lang.startsWith('ru'));
+    }
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    loadVoices();
+
+    function setCurrentInput(el) {
+        if(activeInput) activeInput.classList.remove('active');
+        activeInput = el;
+        activeInput.classList.add('active');
+    }
+
+    function typeChar(char) {
+        if (!activeInput) return;
+        activeInput.value += char;
+        validate(activeInput);
+    }
+
+    function backspace() {
+        if (!activeInput) return;
+        activeInput.value = activeInput.value.slice(0, -1);
+        validate(activeInput);
+    }
+
+    function validate(el) {
+        const correct = el.getAttribute('data-answer');
+        const val = el.value.toLowerCase().trim();
+        
+        if (val === "") {
+            el.className = "word-input active";
+        } else if (val === correct) {
+            el.className = "word-input correct active";
+        } else if (correct.startsWith(val)) {
+            el.className = "word-input active";
+        } else {
+            el.className = "word-input incorrect active";
+        }
+    }
+
+    function playAudio(text, id) {
+        const input = document.getElementById('input-' + id);
+        setCurrentInput(input);
+
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'ru-RU';
+        msg.rate = 0.8; 
+        if (maleVoice) msg.voice = maleVoice;
+        window.speechSynthesis.speak(msg);
+    }
+
+    function resetAll() {
+        document.querySelectorAll('.word-input').forEach(i => {
+            i.value = "";
+            i.className = "word-input";
+        });
+        activeInput = null;
+    }
+
+    function solveAll() {
+        document.querySelectorAll('.word-input').forEach(i => {
+            const answer = i.getAttribute('data-answer');
+            i.value = answer;
+            i.className = "word-input correct";
+        });
+        activeInput = null;
+    }
+
+    window.onload = () => {
+        loadVoices();
+        const first = document.getElementById('input-1');
+        setCurrentInput(first);
+    };
+</script>
+
+</body>
+</html>
