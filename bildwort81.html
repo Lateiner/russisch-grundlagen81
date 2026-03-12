@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bild-Wort-Zuordnung: 15 Übungen</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { text-align: center; color: var(--secondary-color); font-size: 1.1rem; font-weight: 400; margin-bottom: 30px; }
+
+        .explanation {
+            background: #e1f5fe;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #fff;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-3px); border-color: var(--secondary-color); }
+
+        .icon {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            display: block;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .desc {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #ccc;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select.correct { border-color: var(--success-color); background-color: #e8f5e9; }
+        select.incorrect { border-color: var(--error-color); background-color: #ffebee; }
+
+        .btn-group {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: sticky;
+            bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+
+        @media (max-width: 500px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 4</h1>
+    <h2>Bild-Wort-Zuordnung (15 Beispiele)</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Identifizieren Sie das Körperteil im Bild und wählen Sie die passende russische Bezeichnung (Possessivadjektiv + Substantiv) aus dem Menü.
+    </div>
+
+    <div class="grid" id="main-grid">
+        <!-- 1 -->
+        <div class="card">
+            <span class="icon">🪶</span>
+            <span class="desc">(Pfauenfeder)</span>
+            <select onchange="validate(this)" data-answer="ПАВЛИНЬЕ ПЕРО">
+                <option value="">-- wählen --</option>
+                <option value="ПАВЛИНЬЕ ПЕРО">ПАВЛИНЬЕ ПЕРО</option>
+                <option value="ПТИЧЬЕ ПЕРО">ПТИЧЬЕ ПЕРО</option>
+                <option value="КУРИНОЕ ПЕРО">КУРИНОЕ ПЕРО</option>
+            </select>
+        </div>
+        <!-- 2 -->
+        <div class="card">
+            <span class="icon">🦌</span>
+            <span class="desc">(Hirschgeweih)</span>
+            <select onchange="validate(this)" data-answer="ОЛЕНЬИ РОГА">
+                <option value="">-- wählen --</option>
+                <option value="ОЛЕНЬИ РОГА">ОЛЕНЬИ РОГА</option>
+                <option value="БЫЧЬИ РОГА">БЫЧЬИ РОГА</option>
+                <option value="КОЗЬИ РОГА">КОЗЬИ РОГА</option>
+            </select>
+        </div>
+        <!-- 3 -->
+        <div class="card">
+            <span class="icon">🐾</span>
+            <span class="desc">(Bärentatze)</span>
+            <select onchange="validate(this)" data-answer="МЕДВЕЖЬЯ ЛАПА">
+                <option value="">-- wählen --</option>
+                <option value="ВОЛЧЬЯ ЛАПА">ВОЛЧЬЯ ЛАПА</option>
+                <option value="МЕДВЕЖЬЯ ЛАПА">МЕДВЕЖЬЯ ЛАПА</option>
+                <option value="КОШАЧЬЯ ЛАПА">КОШАЧЬЯ ЛАПА</option>
+            </select>
+        </div>
+        <!-- 4 -->
+        <div class="card">
+            <span class="icon">🦅</span>
+            <span class="desc">(Adlerschnabel)</span>
+            <select onchange="validate(this)" data-answer="ОРЛИНЫЙ КЛЮВ">
+                <option value="">-- wählen --</option>
+                <option value="ОРЛИНЫЙ КЛЮВ">ОРЛИНЫЙ КЛЮВ</option>
+                <option value="ПТИЧЬЕ КРЫЛО">ПТИЧЬЕ КРЫЛО</option>
+                <option value="ВОРОНЬЕ ГНЕЗДО">ВОРОНЬЕ ГНЕЗДО</option>
+            </select>
+        </div>
+        <!-- 5 -->
+        <div class="card">
+            <span class="icon">🦊</span>
+            <span class="desc">(Fuchsschwanz)</span>
+            <select onchange="validate(this)" data-answer="ЛИСИЙ ХВОСТ">
+                <option value="">-- wählen --</option>
+                <option value="ЛИСИЙ ХВОСТ">ЛИСИЙ ХВОСТ</option>
+                <option value="ВОЛЧИЙ ХВОСТ">ВОЛЧИЙ ХВОСТ</option>
+                <option value="СОБАЧИЙ ХВОСТ">СОБАЧИЙ ХВОСТ</option>
+            </select>
+        </div>
+        <!-- 6 -->
+        <div class="card">
+            <span class="icon">🐰</span>
+            <span class="desc">(Hasenohren)</span>
+            <select onchange="validate(this)" data-answer="ЗАЯЧЬИ УШИ">
+                <option value="">-- wählen --</option>
+                <option value="ЗАЯЧЬИ УШИ">ЗАЯЧЬИ УШИ</option>
+                <option value="ОСЛИНЫЕ УШИ">ОСЛИНЫЕ УШИ</option>
+                <option value="ЛИСЬИ УШИ">ЛИСЬИ УШИ</option>
+            </select>
+        </div>
+        <!-- 7 -->
+        <div class="card">
+            <span class="icon">🦷</span>
+            <span class="desc">(Wolfszähne)</span>
+            <select onchange="validate(this)" data-answer="ВОЛЧЬИ ЗУБЫ">
+                <option value="">-- wählen --</option>
+                <option value="СОБАЧЬИ ЗУБЫ">СОБАЧЬИ ЗУБЫ</option>
+                <option value="РЫБЬИ ЗУБЫ">РЫБЬИ ЗУБЫ</option>
+                <option value="ВОЛЧЬИ ЗУБЫ">ВОЛЧЬИ ЗУБЫ</option>
+            </select>
+        </div>
+        <!-- 8 -->
+        <div class="card">
+            <span class="icon">🐫</span>
+            <span class="desc">(Kamelhöcker)</span>
+            <select onchange="validate(this)" data-answer="ВЕРБЛЮЖИЙ ГОРБ">
+                <option value="">-- wählen --</option>
+                <option value="ВЕРБЛЮЖИЙ ГОРБ">ВЕРБЛЮЖИЙ ГОРБ</option>
+                <option value="ОЛЕНИЙ РОГ">ОЛЕНИЙ РОГ</option>
+                <option value="СЛОНОВИЙ ХОБОТ">СЛОНОВИЙ ХОБОТ</option>
+            </select>
+        </div>
+        <!-- 9 -->
+        <div class="card">
+            <span class="icon">🐘</span>
+            <span class="desc">(Elefantenrüssel)</span>
+            <select onchange="validate(this)" data-answer="СЛОНОВИЙ ХОБОТ">
+                <option value="">-- wählen --</option>
+                <option value="СЛОНОВИЙ ХОБОТ">СЛОНОВИЙ ХОБОТ</option>
+                <option value="ЗМЕИНЫЙ ЯЗЫК">ЗМЕИНЫЙ ЯЗЫК</option>
+                <option value="РЫБИЙ ХВОСТ">РЫБИЙ ХВОСТ</option>
+            </select>
+        </div>
+        <!-- 10 -->
+        <div class="card">
+            <span class="icon">🐍</span>
+            <span class="desc">(Schlangenzunge)</span>
+            <select onchange="validate(this)" data-answer="ЗМЕИНЫЙ ЯЗЫК">
+                <option value="">-- wählen --</option>
+                <option value="РЫБИЙ ХВОСТ">РЫБИЙ ХВОСТ</option>
+                <option value="ЗМЕИНЫЙ ЯЗЫК">ЗМЕИНЫЙ ЯЗЫК</option>
+                <option value="ПТИЧИЙ КЛЮВ">ПТИЧИЙ КЛЮВ</option>
+            </select>
+        </div>
+        <!-- 11 -->
+        <div class="card">
+            <span class="icon">🐑</span>
+            <span class="desc">(Schafswolle)</span>
+            <select onchange="validate(this)" data-answer="ОВЕЧЬЯ ШЕРСТЬ">
+                <option value="">-- wählen --</option>
+                <option value="КОШАЧЬЯ ШЕРСТЬ">КОШАЧЬЯ ШЕРСТЬ</option>
+                <option value="ОВЕЧЬЯ ШЕРСТЬ">ОВЕЧЬЯ ШЕРСТЬ</option>
+                <option value="МЕДВЕЖЬЯ ШЕРСТЬ">МЕДВЕЖЬЯ ШЕРСТЬ</option>
+            </select>
+        </div>
+        <!-- 12 -->
+        <div class="card">
+            <span class="icon">🐿️</span>
+            <span class="desc">(Eichhörnchenschwanz)</span>
+            <select onchange="validate(this)" data-answer="БЕЛИЧИЙ ХВОСТ">
+                <option value="">-- wählen --</option>
+                <option value="ЛИСИЙ ХВОСТ">ЛИСИЙ ХВОСТ</option>
+                <option value="БЕЛИЧИЙ ХВОСТ">БЕЛИЧИЙ ХВОСТ</option>
+                <option value="ЗАЯЧИЙ ХВОСТ">ЗАЯЧИЙ ХВОСТ</option>
+            </select>
+        </div>
+        <!-- 13 -->
+        <div class="card">
+            <span class="icon">🪺</span>
+            <span class="desc">(Krähennest)</span>
+            <select onchange="validate(this)" data-answer="ВОРОНЬЕ ГНЕЗДО">
+                <option value="">-- wählen --</option>
+                <option value="ПТИЧЬЕ ПЕРО">ПТИЧЬЕ ПЕРО</option>
+                <option value="ОРЛИНОЕ КРЫЛО">ОРЛИНОЕ КРЫЛО</option>
+                <option value="ВОРОНЬЕ ГНЕЗДО">ВОРОНЬЕ ГНЕЗДО</option>
+            </select>
+        </div>
+        <!-- 14 -->
+        <div class="card">
+            <span class="icon">🐒</span>
+            <span class="desc">(Affenschwanz)</span>
+            <select onchange="validate(this)" data-answer="ОБЕЗЬЯНИЙ ХВОСТ">
+                <option value="">-- wählen --</option>
+                <option value="ОБЕЗЬЯНИЙ ХВОСТ">ОБЕЗЬЯНИЙ ХВОСТ</option>
+                <option value="ЧЕРЕПАШИЙ ПАНЦИРЬ">ЧЕРЕПАШИЙ ПАНЦИРЬ</option>
+                <option value="СЛОНОВИЙ ХОБОТ">СЛОНОВИЙ ХОБОТ</option>
+            </select>
+        </div>
+        <!-- 15 -->
+        <div class="card">
+            <span class="icon">🥛</span>
+            <span class="desc">(Kuhmilch)</span>
+            <select onchange="validate(this)" data-answer="КОРОВЬЕ МОЛОКО">
+                <option value="">-- wählen --</option>
+                <option value="КОРОВЬЕ МОЛОКО">КОРОВЬЕ МОЛОКО</option>
+                <option value="ОВЕЧЬЕ МОЛОКО">ОВЕЧЬЕ МОЛОКО</option>
+                <option value="КОЗЬЕ МОЛОКО">КОЗЬЕ МОЛОКО</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="btn-sol" onclick="solveAll()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function validate(el) {
+        const correct = el.getAttribute('data-answer');
+        if (el.value === "") {
+            el.className = "";
+        } else if (el.value === correct) {
+            el.className = "correct";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function resetAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = "";
+            s.className = "";
+        });
+        shuffleCards();
+    }
+
+    function solveAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = s.getAttribute('data-answer');
+            s.className = "correct";
+        });
+    }
+
+    function shuffleCards() {
+        const grid = document.getElementById('main-grid');
+        const cards = Array.from(grid.children);
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            grid.appendChild(cards[j]);
+        }
+    }
+
+    window.onload = shuffleCards;
+</script>
+
+</body>
+</html>
