@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategorisierung: Konsonantenwechsel bei Adjektiven</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { text-align: center; font-size: 1.1rem; color: var(--secondary-color); font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Wort-Pool */
+        .word-pool {
+            background: #fff;
+            border: 2px dashed #cbd5e0;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            min-height: 100px;
+        }
+
+        .draggable {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 600;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .draggable:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable.correct { background-color: var(--success-color); }
+        .draggable.incorrect { background-color: var(--error-color); }
+
+        /* Spalten Layout */
+        .columns-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .column {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .column.drag-over { background: #e2e8f0; border-color: var(--secondary-color); }
+
+        .column h3 {
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .drop-area {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.9; }
+
+        /* Responsivität */
+        @media (max-width: 800px) {
+            .columns-container { grid-template-columns: 1fr; }
+            .column { min-height: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 2</h1>
+    <h2>Kategorisierung nach Konsonantenwechsel</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Ziehen Sie die Adjektive in die richtige Spalte, je nachdem, ob sich der Stamm im Vergleich zum Ursprungswort (Substantiv) verändert hat oder nicht.
+    </div>
+
+    <div id="word-pool" class="word-pool">
+        <!-- Wörter werden per JS hier eingefügt -->
+    </div>
+
+    <div class="columns-container">
+        <!-- Spalte 1 -->
+        <div class="column" data-category="none">
+            <h3>1. Kein Wechsel<br>(z. B. ВОРОНА ➔ ВОРОНИЙ)</h3>
+            <div class="drop-area"></div>
+        </div>
+
+        <!-- Spalte 2 -->
+        <div class="column" data-category="ch">
+            <h3>2. Wechsel zu Ч<br>(z. B. К/Ц ➔ Ч: ВОЛК ➔ ВОЛЧИЙ)</h3>
+            <div class="drop-area"></div>
+        </div>
+
+        <!-- Spalte 3 -->
+        <div class="column" data-category="sh-zh">
+            <h3>3. Wechsel zu Ш oder Ж<br>(z. B. Х ➔ Ш / Д ➔ Ж)</h3>
+            <div class="drop-area"></div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="resetGame()">Zurücksetzen & Mischen</button>
+        <button class="btn-sol" onclick="showSolution()">Lösung anzeigen</button>
+    </div>
+</div>
+
+<script>
+    const words = [
+        { text: "ВОРОНИЙ", cat: "none" },
+        { text: "ЛИСИЙ", cat: "none" },
+        { text: "ОЛЕНИЙ", cat: "none" },
+        { text: "СОБАЧИЙ", cat: "ch" },
+        { text: "ВОЛЧИЙ", cat: "ch" },
+        { text: "ПТИЧИЙ", cat: "ch" },
+        { text: "ЗАЯЧИЙ", cat: "ch" },
+        { text: "ЧЕРЕПАШИЙ", cat: "sh-zh" },
+        { text: "МЕДВЕЖИЙ", cat: "sh-zh" },
+        { text: "ВЕРБЛЮЖИЙ", cat: "sh-zh" },
+        { text: "РЫБИЙ", cat: "none" },
+        { text: "ОБЕЗЬЯНИЙ", cat: "none" },
+        { text: "ДЕЛЬФИНИЙ", cat: "none" },
+        { text: "ПАВЛИНЬИ", cat: "none" },
+        { text: "КОШАЧИЙ", cat: "ch" },
+        { text: "БЕЛИЧИЙ", cat: "ch" },
+        { text: "ОВЕЧИЙ", cat: "ch" },
+        { text: "БАРСУЧИЙ", cat: "ch" },
+        { text: "ЛЯГУШАЧИЙ", cat: "sh-zh" },
+        { text: "ПИНГВИНЬЕ", cat: "none" }
+    ];
+
+    let draggedElement = null;
+
+    function initGame() {
+        const pool = document.getElementById('word-pool');
+        pool.innerHTML = '';
+        
+        // Mischen
+        const shuffled = [...words].sort(() => Math.random() - 0.5);
+        
+        shuffled.forEach((word, index) => {
+            const div = document.createElement('div');
+            div.className = 'draggable';
+            div.draggable = true;
+            div.textContent = word.text;
+            div.id = 'word-' + index;
+            div.dataset.cat = word.cat;
+            
+            div.addEventListener('dragstart', dragStart);
+            div.addEventListener('dragend', dragEnd);
+            
+            pool.appendChild(div);
+        });
+    }
+
+    function dragStart() {
+        draggedElement = this;
+        setTimeout(() => this.style.opacity = '0.5', 0);
+    }
+
+    function dragEnd() {
+        this.style.opacity = '1';
+        draggedElement = null;
+    }
+
+    const columns = document.querySelectorAll('.column');
+    columns.forEach(col => {
+        col.addEventListener('dragover', e => e.preventDefault());
+        col.addEventListener('dragenter', function() { this.classList.add('drag-over'); });
+        col.addEventListener('dragleave', function() { this.classList.remove('drag-over'); });
+        col.addEventListener('drop', function() {
+            this.classList.remove('drag-over');
+            const dropArea = this.querySelector('.drop-area');
+            const category = this.dataset.category;
+            
+            if (draggedElement) {
+                dropArea.appendChild(draggedElement);
+                // Direktes Feedback
+                if (draggedElement.dataset.cat === category) {
+                    draggedElement.classList.add('correct');
+                    draggedElement.classList.remove('incorrect');
+                } else {
+                    draggedElement.classList.add('incorrect');
+                    draggedElement.classList.remove('correct');
+                }
+            }
+        });
+    });
+
+    function resetGame() {
+        const draggables = document.querySelectorAll('.draggable');
+        draggables.forEach(d => {
+            d.classList.remove('correct', 'incorrect');
+            document.getElementById('word-pool').appendChild(d);
+        });
+        initGame();
+    }
+
+    function showSolution() {
+        const draggables = document.querySelectorAll('.draggable');
+        draggables.forEach(d => {
+            const cat = d.dataset.cat;
+            const targetCol = document.querySelector(`.column[data-category="${cat}"] .drop-area`);
+            targetCol.appendChild(d);
+            d.classList.add('correct');
+            d.classList.remove('incorrect');
+        });
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
