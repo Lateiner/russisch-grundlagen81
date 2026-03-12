@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory: Tier zu Adjektiv</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { text-align: center; font-size: 1.1rem; color: var(--secondary-color); font-weight: 400; margin-top: 0; margin-bottom: 20px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        /* Memory Grid */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            perspective: 1000px;
+            min-height: 400px;
+        }
+
+        .memory-card {
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s, opacity 0.5s, visibility 0.5s;
+            cursor: pointer;
+        }
+
+        /* Effekt: Gefundene Paare ausblenden */
+        .memory-card.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 5px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #ddd;
+        }
+
+        /* Rückseite (verdeckt) */
+        .card-back {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            border-color: var(--primary-color);
+        }
+
+        /* Vorderseite (Inhalt) */
+        .card-front {
+            background-color: #fff;
+            color: var(--primary-color);
+            transform: rotateY(180deg);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.9; }
+
+        /* Responsivität */
+        @media (max-width: 600px) {
+            .memory-grid { grid-template-columns: repeat(3, 1fr); min-height: 350px; }
+            .memory-card { height: 85px; }
+            .card-front { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 7</h1>
+    <h2>Memory: Tier ➔ Adjektiv</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Finden Sie die Paare! Kombinieren Sie das Tier mit dem richtigen Adjektiv. Korrekte Paare werden ausgeblendet. Klicken Sie auf „Lösung anzeigen“, um alle Paare farblich markiert zu sehen.
+    </div>
+
+    <div class="stats">Paare gefunden: <span id="matches">0</span>/10</div>
+
+    <div id="game-grid" class="memory-grid">
+        <!-- Karten werden per JS erzeugt -->
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="initGame()">Neues Spiel & Mischen</button>
+        <button class="btn-sol" id="sol-btn" onclick="showSolution()">Lösung anzeigen</button>
+    </div>
+</div>
+
+<script>
+    const pairs = [
+        { a: "ВОЛК", b: "ВОЛЧИЙ" },
+        { a: "СОБАКА", b: "СОБАЧИЙ" },
+        { a: "КОШКА", b: "КОШАЧИЙ" },
+        { a: "ПТИЦА", b: "ПТИЧИЙ" },
+        { a: "ЗАЯЦ", b: "ЗАЯЧИЙ" },
+        { a: "МЕДВЕДЬ", b: "МЕДВЕЖИЙ" },
+        { a: "ЛИСА", b: "ЛИСИЙ" },
+        { a: "ОЛЕНЬ", b: "ОЛЕНИЙ" },
+        { a: "ВЕРБЛЮД", b: "ВЕРБЛЮЖИЙ" },
+        { a: "ЧЕРЕПАХА", b: "ЧЕРЕПАШИЙ" }
+    ];
+
+    // 10 Pastellfarben für die Lösung
+    const solColors = [
+        '#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF',
+        '#A0C4FF', '#BDB2FF', '#FFC6FF', '#E2ECE9', '#D4D4D4'
+    ];
+
+    let flippedCards = [];
+    let matchedCount = 0;
+    let isLocking = false;
+
+    function initGame() {
+        const grid = document.getElementById('game-grid');
+        grid.innerHTML = '';
+        flippedCards = [];
+        matchedCount = 0;
+        isLocking = false;
+        document.getElementById('matches').textContent = '0';
+
+        let cardList = [];
+        pairs.forEach((pair, index) => {
+            cardList.push({ text: pair.a, pairId: index });
+            cardList.push({ text: pair.b, pairId: index });
+        });
+
+        cardList.sort(() => Math.random() - 0.5);
+
+        cardList.forEach((cardData, i) => {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.pairId = cardData.pairId;
+            
+            card.innerHTML = `
+                <div class="card-back">?</div>
+                <div class="card-front">${cardData.text}</div>
+            `;
+
+            card.addEventListener('click', flipCard);
+            grid.appendChild(card);
+        });
+    }
+
+    function flipCard() {
+        if (isLocking) return;
+        if (this.classList.contains('flipped') || this.classList.contains('hidden')) return;
+
+        this.classList.add('flipped');
+        flippedCards.push(this);
+
+        if (flippedCards.length === 2) {
+            isLocking = true;
+            checkMatch();
+        }
+    }
+
+    function checkMatch() {
+        const [card1, card2] = flippedCards;
+
+        if (card1.dataset.pairId === card2.dataset.pairId) {
+            matchedCount++;
+            document.getElementById('matches').textContent = matchedCount;
+            
+            setTimeout(() => {
+                card1.classList.add('hidden');
+                card2.classList.add('hidden');
+                flippedCards = [];
+                isLocking = false;
+                if (matchedCount === pairs.length) alert("Super! Alle Paare gefunden.");
+            }, 700);
+        } else {
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                flippedCards = [];
+                isLocking = false;
+            }, 1000);
+        }
+    }
+
+    function showSolution() {
+        isLocking = true; // Spielzug unterbrechen
+        const allCards = document.querySelectorAll('.memory-card');
+        
+        allCards.forEach(card => {
+            card.classList.remove('hidden'); // Alle wieder einblenden
+            card.classList.add('flipped'); // Alle aufdecken
+            
+            // Jedes Paar bekommt seine eigene Farbe
+            const pairId = card.dataset.pairId;
+            const front = card.querySelector('.card-front');
+            front.style.backgroundColor = solColors[pairId];
+            front.style.borderColor = solColors[pairId];
+        });
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
