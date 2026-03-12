@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idiome: Russisch-Deutsch Parallel-Übung</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); font-size: 1.6rem; margin-bottom: 5px; }
+        h2 { text-align: center; color: var(--secondary-color); font-size: 1.1rem; font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+
+        .explanation {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Wort-Pool oben */
+        .pool-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--secondary-color);
+        }
+
+        .pool-area {
+            background: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+            border: 2px dashed #cbd5e0;
+            min-height: 80px;
+        }
+
+        .draggable {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: grab;
+            font-size: 0.85rem;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            text-align: center;
+        }
+
+        .draggable:active { cursor: grabbing; transform: scale(0.95); }
+
+        /* Paralleles Layout */
+        .matching-table {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .idiom-russian {
+            background: #fff;
+            border: 1px solid #e1e8ed;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: right;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .drop-zone {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .drop-zone.drag-over {
+            background: #e3f2fd;
+            border-color: var(--secondary-color);
+        }
+
+        /* Feedback Farben */
+        .drop-zone.correct { border: 2px solid var(--success-color); background-color: #e8f5e9; border-style: solid; }
+        .drop-zone.incorrect { border: 2px solid var(--error-color); background-color: #ffebee; border-style: solid; }
+
+        /* Draggable im Zielbereich */
+        .drop-zone .draggable {
+            background: transparent;
+            color: var(--primary-color);
+            box-shadow: none;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .btn-group {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .match-row { grid-template-columns: 1fr; gap: 5px; margin-bottom: 10px; }
+            .idiom-russian { text-align: center; background: #eef7fd; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Idiome</h1>
+    <h2>Bedeutungen parallel zuordnen</h2>
+
+    <div class="explanation">
+        <strong>Anleitung:</strong> Ziehen Sie die deutsche Bedeutung aus dem grauen Bereich oben in das jeweils passende weiße Feld rechts neben dem russischen Idiom. <br>
+        Die Felder werden bei korrekter Eingabe sofort <strong>Grün</strong> markiert.
+    </div>
+
+    <span class="pool-header">Wort-Pool (Deutsch):</span>
+    <div class="pool-area" id="pool-area">
+        <!-- Draggables werden per JS hier eingefügt -->
+    </div>
+
+    <div class="matching-table" id="matching-table">
+        <!-- Row 1 -->
+        <div class="match-row">
+            <div class="idiom-russian">Медвежья услуга</div>
+            <div class="drop-zone" data-answer="Bärendienst (gut gemeinte, aber schadende Hilfe)"></div>
+        </div>
+        <!-- Row 2 -->
+        <div class="match-row">
+            <div class="idiom-russian">Волчий аппетит</div>
+            <div class="drop-zone" data-answer="Wolfshunger (sehr großer Hunger)"></div>
+        </div>
+        <!-- Row 3 -->
+        <div class="match-row">
+            <div class="idiom-russian">Собачий холод</div>
+            <div class="drop-zone" data-answer="Hundekälte (extreme Kälte)"></div>
+        </div>
+        <!-- Row 4 -->
+        <div class="match-row">
+            <div class="idiom-russian">Птичьи права</div>
+            <div class="drop-zone" data-answer="völlige Rechtlosigkeit / unsichere Lage"></div>
+        </div>
+        <!-- Row 5 -->
+        <div class="match-row">
+            <div class="idiom-russian">Заячья душа</div>
+            <div class="drop-zone" data-answer="Hasenfuß (ein sehr ängstlicher Mensch)"></div>
+        </div>
+        <!-- Row 6 -->
+        <div class="match-row">
+            <div class="idiom-russian">Телячий восторг</div>
+            <div class="drop-zone" data-answer="naive, übertriebene Begeisterung"></div>
+        </div>
+        <!-- Row 7 -->
+        <div class="match-row">
+            <div class="idiom-russian">Лисья хитрость</div>
+            <div class="drop-zone" data-answer="Fuchsschläue"></div>
+        </div>
+        <!-- Row 8 -->
+        <div class="match-row">
+            <div class="idiom-russian">Кошачий концерт</div>
+            <div class="drop-zone" data-answer="Katzenmusik (schrecklicher Lärm)"></div>
+        </div>
+        <!-- Row 9 -->
+        <div class="match-row">
+            <div class="idiom-russian">Волчий билет</div>
+            <div class="drop-zone" data-answer="Berufsverbot / Ausschluss aus der Gesellschaft"></div>
+        </div>
+        <!-- Row 10 -->
+        <div class="match-row">
+            <div class="idiom-russian">Птичье молоко</div>
+            <div class="drop-zone" data-answer="etwas extrem Seltenes / eine Rarität"></div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reset" onclick="resetGame()">Zurücksetzen & Mischen</button>
+        <button class="btn-sol" onclick="showSolution()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    const answerData = [
+        "Bärendienst (gut gemeinte, aber schadende Hilfe)",
+        "Wolfshunger (sehr großer Hunger)",
+        "Hundekälte (extreme Kälte)",
+        "völlige Rechtlosigkeit / unsichere Lage",
+        "Hasenfuß (ein sehr ängstlicher Mensch)",
+        "naive, übertriebene Begeisterung",
+        "Fuchsschläue",
+        "Katzenmusik (schrecklicher Lärm)",
+        "Berufsverbot / Ausschluss aus der Gesellschaft",
+        "etwas extrem Seltenes / eine Rarität"
+    ];
+
+    let draggedItem = null;
+
+    function initPool() {
+        const pool = document.getElementById('pool-area');
+        pool.innerHTML = '';
+        const shuffled = [...answerData].sort(() => Math.random() - 0.5);
+        
+        shuffled.forEach((text, index) => {
+            const el = document.createElement('div');
+            el.className = 'draggable';
+            el.draggable = true;
+            el.textContent = text;
+            el.id = 'drag-' + index;
+            
+            el.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => this.style.opacity = '0.4', 0);
+            });
+            
+            el.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+                draggedItem = null;
+            });
+            
+            pool.appendChild(el);
+        });
+
+        setupZones();
+    }
+
+    function setupZones() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', e => e.preventDefault());
+            zone.addEventListener('dragenter', e => zone.classList.add('drag-over'));
+            zone.addEventListener('dragleave', e => zone.classList.remove('drag-over'));
+            
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                // Falls bereits besetzt, altes Element zurück in den Pool
+                if (this.children.length > 0) {
+                    const existing = this.children[0];
+                    document.getElementById('pool-area').appendChild(existing);
+                }
+
+                this.appendChild(draggedItem);
+                validateZone(this);
+            });
+        });
+    }
+
+    function validateZone(zone) {
+        const answer = zone.dataset.answer;
+        const currentText = zone.innerText.trim();
+        
+        zone.classList.remove('correct', 'incorrect');
+        if (currentText === answer) {
+            zone.classList.add('correct');
+        } else {
+            zone.classList.add('incorrect');
+        }
+    }
+
+    function resetGame() {
+        const pool = document.getElementById('pool-area');
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            while (zone.firstChild) {
+                pool.appendChild(zone.firstChild);
+            }
+            zone.classList.remove('correct', 'incorrect');
+        });
+        initPool();
+    }
+
+    function showSolution() {
+        const pool = document.getElementById('pool-area');
+        const zones = document.querySelectorAll('.drop-zone');
+        const items = document.querySelectorAll('.draggable');
+
+        zones.forEach(zone => {
+            const answer = zone.dataset.answer;
+            const correctItem = Array.from(items).find(i => i.textContent.trim() === answer);
+            
+            if (correctItem) {
+                zone.appendChild(correctItem);
+                zone.classList.remove('incorrect');
+                zone.classList.add('correct');
+            }
+        });
+    }
+
+    window.onload = initPool;
+</script>
+
+</body>
+</html>
