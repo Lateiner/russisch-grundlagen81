@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontext-Quiz: 15 Übungen zu Possessivadjektiven</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); font-size: 1.8rem; margin-bottom: 5px; }
+        h2 { text-align: center; color: var(--secondary-color); font-size: 1.2rem; font-weight: 400; margin-top: 0; margin-bottom: 30px; }
+
+        .explanation {
+            background: #e1f5fe;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .quiz-item {
+            background: #fff;
+            border: 1px solid #e1e8ed;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .quiz-item:hover { border-color: var(--secondary-color); }
+
+        .sentence {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .translation {
+            display: block;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .opt-btn {
+            padding: 10px 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            min-width: 140px;
+        }
+
+        .opt-btn:hover { background: #f1f1f1; }
+
+        /* Feedback-Styles */
+        .selected-correct {
+            background-color: var(--success-color) !important;
+            color: white !important;
+            border-color: var(--success-color) !important;
+        }
+
+        .selected-incorrect {
+            background-color: var(--error-color) !important;
+            color: white !important;
+            border-color: var(--error-color) !important;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            position: sticky;
+            bottom: 20px;
+        }
+
+        button.action-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: var(--secondary-color); color: white; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .opt-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Aufgabenform 3</h1>
+    <h2>Kontext-Quiz: 15 Übungen</h2>
+
+    <div class="explanation">
+        <strong>Grammatik-Regel:</strong>
+        <ul>
+            <li>Nutzen Sie <strong>-ИН (-ИНА / -ИНЫ)</strong>, wenn das Tier ein <u>konkreter</u> Besitzer ist (z.B. „der Napf meiner Katze“).</li>
+            <li>Nutzen Sie <strong>-ИЙ (-ЬЯ / -ЬЕ / -ЬИ)</strong> für <u>allgemeine</u> Arten, Eigenschaften oder Produkte (z.B. „Katzenjammer“, „Vogelperspektive“).</li>
+        </ul>
+    </div>
+
+    <div id="quiz-container">
+        <!-- 1 -->
+        <div class="quiz-item" data-answer="ans1-b">
+            <span class="sentence">1. В магазине продаётся _______ еда.</span>
+            <span class="translation">(Im Laden wird Katzenfutter [allgemein] verkauft.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans1-a" onclick="check(this, 'ans1-b')">КОШКИНА</button>
+                <button class="opt-btn" id="ans1-b" onclick="check(this, 'ans1-b')">КОШАЧЬЯ</button>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="quiz-item" data-answer="ans2-a">
+            <span class="sentence">2. Где _______ миска? Наша кошка хочет есть.</span>
+            <span class="translation">(Wo ist der Napf der Katze [unserer Katze]? Sie hat Hunger.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans2-a" onclick="check(this, 'ans2-a')">КОШКИНА</button>
+                <button class="opt-btn" id="ans2-b" onclick="check(this, 'ans2-a')">КОШАЧЬЯ</button>
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="quiz-item" data-answer="ans3-b">
+            <span class="sentence">3. У него настоящий _______ аппетит.</span>
+            <span class="translation">(Er hat einen echten Wolfshunger [allgemeine Eigenschaft].)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans3-a" onclick="check(this, 'ans3-b')">ВОЛКОВ</button>
+                <button class="opt-btn" id="ans3-b" onclick="check(this, 'ans3-b')">ВОЛЧИЙ</button>
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="quiz-item" data-answer="ans4-a">
+            <span class="sentence">4. Смотри! Это _______ хвост торчит из кустов.</span>
+            <span class="translation">(Schau! Das ist der Schwanz des Hundes [eines bestimmten], der da herausragt.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans4-a" onclick="check(this, 'ans4-a')">СОБАКИН</button>
+                <button class="opt-btn" id="ans4-b" onclick="check(this, 'ans4-a')">СОБАЧИЙ</button>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="quiz-item" data-answer="ans5-b">
+            <span class="sentence">5. Мне нравится этот _______ лай.</span>
+            <span class="translation">(Ich mag dieses [allgemeine] Hundebellen.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans5-a" onclick="check(this, 'ans5-b')">СОБАКИН</button>
+                <button class="opt-btn" id="ans5-b" onclick="check(this, 'ans5-b')">СОБАЧИЙ</button>
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="quiz-item" data-answer="ans6-b">
+            <span class="sentence">6. Мы нашли _______ перо в леsu.</span>
+            <span class="translation">(Wir haben eine [allgemeine] Vogelfeder im Wald gefunden.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans6-a" onclick="check(this, 'ans6-b')">ПТИЦЫНО</button>
+                <button class="opt-btn" id="ans6-b" onclick="check(this, 'ans6-b')">ПТИЧЬЕ</button>
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="quiz-item" data-answer="ans7-a">
+            <span class="sentence">7. Это _______ зерно? Наш попугай его не съел.</span>
+            <span class="translation">(Ist das das Futter des Vogels [unseres Vogels]? Er hat es nicht gefressen.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans7-a" onclick="check(this, 'ans7-a')">ПТИЦЫНО</button>
+                <button class="opt-btn" id="ans7-b" onclick="check(this, 'ans7-a')">ПТИЧЬЕ</button>
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="quiz-item" data-answer="ans8-b">
+            <span class="sentence">8. Это обычная _______ хитрость.</span>
+            <span class="translation">(Das ist eine gewöhnliche Fuchsschläue [Gattungsmerkmal].)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans8-a" onclick="check(this, 'ans8-b')">ЛИСИЦЫНА</button>
+                <button class="opt-btn" id="ans8-b" onclick="check(this, 'ans8-b')">ЛИСЬЯ</button>
+            </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="quiz-item" data-answer="ans9-a">
+            <span class="sentence">9. Охотник нашёл _______ нору.</span>
+            <span class="translation">(Der Jäger fand den Bau des Fuchses [eines bestimmten Tieres].)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans9-a" onclick="check(this, 'ans9-a')">ЛИСИЦЫНУ</button>
+                <button class="opt-btn" id="ans9-b" onclick="check(this, 'ans9-a')">ЛИСЬЮ</button>
+            </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="quiz-item" data-answer="ans10-b">
+            <span class="sentence">10. _______ шапка очень тёплая.</span>
+            <span class="translation">(Eine Bärenmütze [aus Bärenfell allgemein] ist sehr warm.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans10-a" onclick="check(this, 'ans10-b')">МЕДВЕДЕВА</button>
+                <button class="opt-btn" id="ans10-b" onclick="check(this, 'ans10-b')">МЕДВЕЖЬЯ</button>
+            </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="quiz-item" data-answer="ans11-b">
+            <span class="sentence">11. Осторожно! Это _______ яд.</span>
+            <span class="translation">(Vorsicht! Das ist Schlangengift [allgemein gefährlich].)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans11-a" onclick="check(this, 'ans11-b')">ЗМЕИН</button>
+                <button class="opt-btn" id="ans11-b" onclick="check(this, 'ans11-b')">ЗМЕИНЫЙ</button>
+            </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="quiz-item" data-answer="ans12-b">
+            <span class="sentence">12. Этот свитер сделан из _______ шерсти.</span>
+            <span class="translation">(Dieser Pullover ist aus Schafswolle [Produkt] gemacht.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans12-a" onclick="check(this, 'ans12-b')">ОВЦЫНОЙ</button>
+                <button class="opt-btn" id="ans12-b" onclick="check(this, 'ans12-b')">ОВЕЧЬЕЙ</button>
+            </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="quiz-item" data-answer="ans13-b">
+            <span class="sentence">13. У него отличный _______ взгляд.</span>
+            <span class="translation">(Er hat einen ausgezeichneten Adlerblick [Metapher/Eigenschaft].)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans13-a" onclick="check(this, 'ans13-b')">ОРЛОВИН</button>
+                <button class="opt-btn" id="ans13-b" onclick="check(this, 'ans13-b')">ОРЛИНЫЙ</button>
+            </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="quiz-item" data-answer="ans14-a">
+            <span class="sentence">14. Посмотри, какие мягкие _______ уши!</span>
+            <span class="translation">(Schau, was für weiche Ohren der Hase [unser Hase hier] hat!)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans14-a" onclick="check(this, 'ans14-a')">ЗАЙЦЫНЫ</button>
+                <button class="opt-btn" id="ans14-b" onclick="check(this, 'ans14-a')">ЗАЯЧЬИ</button>
+            </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="quiz-item" data-answer="ans15-b">
+            <span class="sentence">15. Я очень люблю _______ молоко.</span>
+            <span class="translation">(Ich mag Kuhmilch [Produkt/Gattung] sehr gern.)</span>
+            <div class="options">
+                <button class="opt-btn" id="ans15-a" onclick="check(this, 'ans15-b')">КОРОВИНО</button>
+                <button class="opt-btn" id="ans15-b" onclick="check(this, 'ans15-b')">КОРОВЬЕ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="action-btn btn-reset" onclick="resetQuiz()">Zurücksetzen</button>
+        <button class="action-btn btn-sol" onclick="showSolutions()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function check(btn, correctId) {
+        // Parent Quiz-Item finden
+        const parent = btn.closest('.quiz-item');
+        
+        // Alle Buttons in dieser Sektion zurücksetzen
+        parent.querySelectorAll('.opt-btn').forEach(b => {
+            b.classList.remove('selected-correct', 'selected-incorrect');
+        });
+
+        // Feedback geben
+        if (btn.id === correctId) {
+            btn.classList.add('selected-correct');
+        } else {
+            btn.classList.add('selected-incorrect');
+        }
+    }
+
+    function resetQuiz() {
+        document.querySelectorAll('.opt-btn').forEach(btn => {
+            btn.classList.remove('selected-correct', 'selected-incorrect');
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSolutions() {
+        const items = document.querySelectorAll('.quiz-item');
+        items.forEach(item => {
+            const correctId = item.getAttribute('data-answer');
+            const correctBtn = document.getElementById(correctId);
+            
+            // Andere Markierungen im selben Item entfernen
+            item.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected-incorrect'));
+            
+            // Korrekten Button auf Grün setzen
+            correctBtn.classList.add('selected-correct');
+        });
+    }
+</script>
+
+</body>
+</html>
